@@ -1,0 +1,55 @@
+<!-- templates/borrows.html -->
+{% extends "base.html" %} {% block content %}
+<div class="card card-lg p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Danh sách mượn</h4>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm"
+      >Quay lại sách</a
+    >
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Người mượn</th>
+        <th>Sách</th>
+        <th>Ngày mượn</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in borrow_records %}
+      <tr>
+        <td>{{ rec.borrower_name }}</td>
+        <td>{{ rec.book.title }}</td>
+        <td>{{ rec.borrow_date.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>
+          {% if rec.returned %}
+          <span class="badge bg-success">Đã trả</span>
+          {% else %}
+          <span class="badge bg-warning text-dark">Đang mượn</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if not rec.returned %}
+          <form
+            action="{{ url_for('return_book', borrow_id=rec.id) }}"
+            method="post"
+            onsubmit="return confirm('Xác nhận trả sách?');"
+          >
+            <button class="btn btn-sm btn-success">Trả</button>
+          </form>
+          {% else %} {{ rec.return_date.strftime('%Y-%m-%d %H:%M') if
+          rec.return_date else '-' }} {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">Chưa có giao dịch mượn nào.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

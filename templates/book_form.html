@@ -1,0 +1,46 @@
+<!-- templates/book_form.html -->
+{% extends "base.html" %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card card-lg p-4">
+      <h4>{{ action }} sách</h4>
+      <form method="post">
+        <div class="mb-3">
+          <label class="form-label">Tiêu đề</label>
+          <input
+            name="title"
+            class="form-control"
+            required
+            value="{{ book.title if book else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tác giả</label>
+          <input
+            name="author"
+            class="form-control"
+            value="{{ book.author if book else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tổng số bản</label>
+          <input
+            name="total_copies"
+            type="number"
+            class="form-control"
+            min="1"
+            value="{{ book.total_copies if book else 1 }}"
+          />
+          <div class="form-text">
+            Thay đổi tổng số bản sẽ tự động điều chỉnh số bản còn lại.
+          </div>
+        </div>
+        <button class="btn btn-primary">{{ action }}</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('index') }}"
+          >Hủy</a
+        >
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
