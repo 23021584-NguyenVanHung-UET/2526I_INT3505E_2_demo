@@ -1,0 +1,12 @@
+### V1
+GET http://127.0.0.1:5000/api/v1/books
+
+### V2
+GET http://127.0.0.1:5000/api/v2/books
+
+### V3
+GET http://127.0.0.1:5000/api/v3/books
+
+### V4 (test cache)
+GET http://127.0.0.1:5000/api/v4/books
+If-None-Match: "<ETag từ lần trước>"
