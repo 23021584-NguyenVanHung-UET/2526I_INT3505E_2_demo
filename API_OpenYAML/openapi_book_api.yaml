@@ -1,0 +1,297 @@
+openapi: 3.1.0
+info:
+  title: Book Management API
+  description: API for managing a collection of books and authors (CRUD + search + pagination).
+  version: "1.0.0"
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: http://localhost:8000/v1
+    description: Local development
+paths:
+  /books:
+    get:
+      summary: List books
+      description: Retrieve a paginated list of books. Supports filtering by title, author, and genre.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Items per page
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: Partial match on title
+        - name: author
+          in: query
+          schema:
+            type: string
+          description: Partial match on author name
+        - name: genre
+          in: query
+          schema:
+            type: string
+          description: Filter by genre
+      responses:
+        "200":
+          description: A paginated list of books
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksPage'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+    post:
+      summary: Create a book
+      description: Create a new book. Requires authentication.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreate'
+      responses:
+        "201":
+          description: Book created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+  /books/{bookId}:
+    parameters:
+      - name: bookId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The book identifier (UUID or string)
+    get:
+      summary: Get a book
+      description: Retrieve a single book by its id.
+      responses:
+        "200":
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Update a book
+      description: Replace or update a book. Requires authentication.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdate'
+      responses:
+        "200":
+          description: Book updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a book
+      description: Delete a book by its id. Requires authentication.
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Book deleted (no content)
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+  /authors:
+    get:
+      summary: List authors
+      description: Retrieve a list of authors.
+      responses:
+        "200":
+          description: Authors list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier (UUID)
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        title:
+          type: string
+          example: "The Pragmatic Programmer"
+        description:
+          type: string
+          example: "A practical guide to programming."
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        published_date:
+          type: string
+          format: date
+          example: "1999-10-20"
+        isbn:
+          type: string
+          example: "978-0201616224"
+        page_count:
+          type: integer
+          example: 352
+        language:
+          type: string
+          example: "en"
+        genre:
+          type: string
+          example: "Programming"
+      required:
+        - id
+        - title
+    BookCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        author_ids:
+          type: array
+          items:
+            type: string
+          description: List of author IDs to associate
+        published_date:
+          type: string
+          format: date
+        isbn:
+          type: string
+        page_count:
+          type: integer
+        language:
+          type: string
+        genre:
+          type: string
+      required:
+        - title
+    BookUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        author_ids:
+          type: array
+          items:
+            type: string
+        published_date:
+          type: string
+          format: date
+        isbn:
+          type: string
+        page_count:
+          type: integer
+        language:
+          type: string
+        genre:
+          type: string
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "a1b2c3d4"
+        name:
+          type: string
+          example: "Andy Hunt"
+        bio:
+          type: string
+      required:
+        - id
+        - name
+    BooksPage:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Invalid request"
+tags:
+  - name: books
+    description: Operations about books
+  - name: authors
+    description: Operations about authors
