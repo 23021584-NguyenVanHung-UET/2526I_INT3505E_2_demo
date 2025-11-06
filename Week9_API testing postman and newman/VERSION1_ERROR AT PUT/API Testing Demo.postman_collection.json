@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "75238c5f-83ec-48b7-a4ee-a3dd92a6aec4",
+		"name": "API Testing Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48804593",
+		"_collection_link": "https://smg10vp-4371543.postman.co/workspace/Ki%25E1%25BB%2587t-B%25C3%25B9i-Th%25E1%25BA%25BF's-Workspace~e6ec8458-96f8-454f-8915-42ad66d276c3/collection/48804593-75238c5f-83ec-48b7-a4ee-a3dd92a6aec4?action=share&source=collection_link&creator=48804593"
+	},
+	"item": [
+		{
+			"name": "GET /users?page=2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Response time < 500ms\", () => pm.expect(pm.response.responseTime).to.be.below(500));\r",
+							"pm.test(\"Body is array\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(Array.isArray(json)).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /users/1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"id equals 1\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.id).to.eql(1);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users/1",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
+							"pm.test(\"Response contains id\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property(\"id\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /users/1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Response has updated name\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.name).to.eql(\"Alice Updated\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users/1",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /users/1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 204\", () => {\r",
+							"    pm.expect(pm.response.code === 200 || pm.response.code === 204).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users/1",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
