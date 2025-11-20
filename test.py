@@ -17,7 +17,11 @@ def get_books_accept():
         return jsonify([
             {"id": 1, "title": "Clean Code", "author": "Robert C. Martin"}
         ])
+# Version 1 (default)
+# curl http://localhost:5000/api/books/accept
 
+# Version 2
+# curl -H "Accept: application/vnd.library.v2+json" http://localhost:5000/api/books/accept
 
 # 🧠 Cách 2: Version bằng Custom Header (X-API-Version)
 @app.route('/api/books/custom')
@@ -34,6 +38,10 @@ def get_books_custom():
         return jsonify([
             {"id": 1, "title": "Clean Code", "author": "Robert C. Martin"}
         ])
+# Version 1 (default)
+#curl http://localhost:5000/api/books/custom
 
+# Version 2
+#curl -H "X-API-Version: 2" http://localhost:5000/api/books/custom
 if __name__ == "__main__":
     app.run(debug=True)
