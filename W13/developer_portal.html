@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book API Developer Portal</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f2f4f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #4a76ff;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        button {
+            background: #4a76ff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #355de6;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #00ffae;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .section {
+            margin-top: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>📚 Book API - Developer Portal</h1>
+        <p>Test API trực tiếp ngay trên trình duyệt</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section">
+            <h2>GET /books</h2>
+            <button onclick="getBooks()">📘 Fetch Books</button>
+        </div>
+
+        <div class="section">
+            <h2>POST /books</h2>
+
+            <div class="form-group">
+                <input id="title" placeholder="Book title">
+            </div>
+
+            <div class="form-group">
+                <input id="author" placeholder="Author">
+            </div>
+
+            <button onclick="createBook()">➕ Create Book</button>
+        </div>
+
+        <div class="section">
+            <h2>Response</h2>
+            <pre id="response">Kết quả sẽ hiển thị ở đây...</pre>
+        </div>
+
+    </div>
+
+    <script>
+        function showResponse(data) {
+            document.getElementById("response").textContent =
+                JSON.stringify(data, null, 2);
+        }
+
+        async function getBooks() {
+            const res = await fetch("http://127.0.0.1:5000/books");
+            showResponse(await res.json());
+        }
+
+        async function createBook() {
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+
+            const res = await fetch("http://127.0.0.1:5000/books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, author })
+            });
+
+            showResponse(await res.json());
+        }
+    </script>
+
+</body>
+
+</html>
